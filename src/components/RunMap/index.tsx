@@ -2,7 +2,7 @@ import MapboxLanguage from '@mapbox/mapbox-gl-language';
 import React, {useRef, useCallback, useState} from 'react';
 import Map, {Layer, Source, FullscreenControl, NavigationControl, MapRef} from 'react-map-gl';
 import {MapInstance} from "react-map-gl/src/types/lib";
-import useActivities from '@/hooks/useActivities';
+import useWorkouts from '@/hooks/useWorkouts';
 import {
   MAP_LAYER_LIST,
   IS_CHINESE,
@@ -42,7 +42,7 @@ const RunMap = ({
   geoData,
   thisYear,
 }: IRunMapProps) => {
-  const { countries, provinces } = useActivities();
+  const { countries, provinces } = useWorkouts();
   const mapRef = useRef<MapRef>();
   const [lights, setLights] = useState(PRIVACY_MODE ? false : LIGHTS_ON);
   const keepWhenLightsOff = ['runs2']

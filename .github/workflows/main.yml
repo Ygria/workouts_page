@@ -14,6 +14,7 @@ jobs:
         with:
           repository: Ygria/health
           path: health
+          token: ${{ secrets.HEALTH_TOKEN}} # 使用自定义的 token
 
       # Step 3: Copy content from other repository to current repository
       - name: Copy content

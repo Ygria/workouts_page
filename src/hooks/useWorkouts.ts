@@ -1,82 +1,127 @@
-import { locationForRun, typeForRun } from '@/utils/utils';
-import activities from '@/static/activities.json';
-import { usePapaParse } from 'react-papaparse';
+import { useState, useEffect } from 'react';
+import { readString } from 'react-papaparse';
 
+const useCSVParserFromURL = (fileURL) => {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-const useWorkouts = () => {
+  useEffect(() => {
+    if (!fileURL) {
+      setLoading(false);
+      return;
+    }
 
-    const { readString } = usePapaParse();
-    debugger
-
-    const cities: Record<string, number> = {};
-    const runPeriod: Record<string, number> = {};
-    const provinces: Set<string> = new Set();
-    const countries: Set<string> = new Set();
-    const workouts : Record<string,object> = {}
-    let years: Set<string> = new Set();
-    let thisYear = '';
-
-
-    fetch("/DATA/activity/2024.csv")
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.text();
-        })
-        .then((csvText) => {
-            readString(csvText,{
-                header: true,
-                skipEmptyLines: true,
-                complete: (results) => {
-                    debugger
-                },
-                
-            },);
-         
-        })
-        .catch((error) => {
-
+    const fetchCSV = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(fileURL);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const csvString = await response.text();
+        readString(csvString, {
+          header: true, // optional: if your CSV string has a header row
+          complete: (result) => {
+            setData(result.data);
+            setLoading(false);
+          },
+          error: (err) => {
+            setError(err);
+            setLoading(false);
+          },
         });
-
-
-
-
-
-    activities.forEach((run) => {
-        const location = locationForRun(run);
-
-        const periodName = typeForRun(run);
-        if (periodName) {
-            runPeriod[periodName] = runPeriod[periodName]
-                ? runPeriod[periodName] + 1
-                : 1;
-        }
-
-
-        const { city, province, country } = location;
-        // drop only one char city
-        if (city.length > 1) {
-            cities[city] = cities[city] ? cities[city] + run.distance : run.distance;
-        }
-        if (province) provinces.add(province);
-        if (country) countries.add(country);
-        const year = run.start_date_local.slice(0, 4);
-        years.add(year);
-    });
-
-    let yearsArray = [...years].sort().reverse();
-    if (years) [thisYear] = yearsArray; // set current year as first one of years array
-
-    return {
-        activities,
-        years: yearsArray,
-        countries: [...countries],
-        provinces: [...provinces],
-        cities,
-        runPeriod,
-        thisYear,
+      } catch (err) {
+        setError(err);
+        setLoading(false);
+      }
     };
+
+    fetchCSV();
+  }, [fileURL]);
+
+  return { data, loading, error };
 };
 
-export default useWorkouts;
+export default useCSVParserFromURL;
+
+
+
+
+
+// import { useState, useEffect } from 'react';
+
+
+// const useCSVParser = (csvFile) => {
+//     const { readString } = usePapaParse();
+//     const [data, setData] = useState([]);
+//     const [loading, setLoading] = useState(true);
+//     const [error, setError] = useState(null);
+  
+//     useEffect(() => {
+//       const parseCSV = () => {
+        
+
+//         fetch("/DATA/workouts/2024.csv")
+//         .then((response) => {
+//             if (!response.ok) { 
+//                 throw new Error('Network response was not ok');
+//             }
+//             return response.text();
+//         })
+//         .then(csvText => {
+//             readString(csvText, {
+//                 header: true,
+//                 skipEmptyLines: true,
+//                 complete: (results) => {
+//                     results.data.forEach(record => {
+//                         workouts[record.UUID] = {
+//                             distance: Number(record["Distance"]),
+//                             duration: Number(record["Duration"]),
+//                             type: Number(record["Type"]),
+//                             elevationAscended: Number(record["Elevation Ascended"]),
+//                             totalEnergy: Number(record["Total Energy"]),
+//                             uuid: record["UUID"],
+//                             name: record["Name"],
+//                             startDate: record["Start Date"],
+//                             endDate: record["End Date"],
+//                             flightsClimbed: record["Flights Climbed"],
+//                             swimStrokes: record["Swim Strokes"]
+//                         }
+//                         workoutTypes.add(record["Name"])
+//                         // console.log(workouts)         
+//                     });
+//                 },
+    
+//             });
+//         }
+
+
+
+  
+//     return { data, loading, error };
+//   };
+  
+//   export default useCSVParser;
+
+// const useWorkouts = (url) => {
+//   const [data, setData] = useState(null);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
+
+//   useEffect(() => {
+//     const parseCSV =  fe
+
+//     })
+//     .catch((error) => {
+
+//     });
+
+
+//   return { data, loading, error };
+// };
+
+// export default useWorkouts;
+
+
+

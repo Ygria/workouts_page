@@ -11,7 +11,7 @@ const Layout = ({ children }: React.PropsWithChildren) => {
   return (
     <>
       <Helmet bodyAttributes={{ class: styles.body }}>
-        <html lang="en" />
+        <html lang="zh-cn" />
         <title>{siteTitle}</title>
         <meta name="description" content={description} />
         <meta name="keywords" content={keywords} />

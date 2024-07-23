@@ -12,6 +12,11 @@
   width: 100%;
   font-variant: tabular-nums;
   margin: 2rem 0 5rem 0;
+  font-family: NumberFont;
+  font-weight: 700;
+  font-size: 18px;
+  user-select: none;
+  background-color: rgba(0, 0, 0, 0.3);
 
   :is(thead) {
     color: rgb(204, 204, 204);
@@ -41,8 +46,12 @@
   }
 }
 
-.selected {
-  color: red !important;
+tr:hover,.selected {
+  color:var(--highlight-color);
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.7), /* 发光效果 */
+  0 0 20px rgba(0, 255, 255, 0.5),
+  0 0 30px rgba(0, 255, 255, 0.3);
+  
 }
 
 .tableContainer {

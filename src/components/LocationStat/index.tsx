@@ -3,7 +3,7 @@ import {
   CHINESE_LOCATION_INFO_MESSAGE_FIRST,
   CHINESE_LOCATION_INFO_MESSAGE_SECOND,
 } from '@/utils/const';
-import CitiesStat from './CitiesStat';
+import WorkTypeStat from './WorkTypeStat';
 import LocationSummary from './LocationSummary';
 import PeriodStat from './PeriodStat';
 
@@ -35,7 +35,7 @@ const LocationStat = ({
     </section>
     <hr color="red" />
     <LocationSummary />
-    <CitiesStat onClick={changeCity} />
+    <WorkTypeStat onClick={changeCity} />
     <PeriodStat onClick={changeType} />
     <YearStat year="Total" onClick={changeYear} onClickTypeInYear={onClickTypeInYear}/>
   </div>

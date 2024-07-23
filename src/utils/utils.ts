@@ -27,6 +27,26 @@ export type Coordinate = [number, number];
 
 export type RunIds = Array<number> | [];
 
+
+
+export interface AppleActivity {
+
+  distance: number,
+  duration: number,
+  elevationAscended: number,
+  endDate: Date,
+  startDate: Date,
+  name: string,
+  type: number,
+  uuid: string,
+  totalEnergy: number,
+  swimStrokes: number,
+  flightsClimbed: number
+  // ["1f59634b-204f-4393-b413-fbd65b6dd34a"]["Flights Climbed"]
+
+
+}
+
 export interface Activity {
   run_id: number;
   name: string;
@@ -397,22 +417,27 @@ const filterTypeRuns = (run: Activity, type: string) => {
 }
 
 const filterAndSortRuns = (
-  activities: Activity[],
+
+  workouts: object,
   item: string,
   filterFunc: (_run: Activity, _bvalue: string) => boolean,
   sortFunc: (_a: Activity, _b: Activity) => number,
   item2: string | null,
   filterFunc2: ((_run: Activity, _bvalue: string) => boolean) | null,
 ) => {
-  let s = activities;
-  if (item !== 'Total') {
-    s = activities.filter((run) => filterFunc(run, item));
+  debugger
+  if(workouts && Object.entries(workouts).length > 0){
+    
+    return workouts;
+  }else {
+    return []
   }
-  if(filterFunc2 != null && item2 != null){
-    s = s.filter((run) => filterFunc2(run, item2));
-  }
-  return s.sort(sortFunc);
+  
+ 
+  
 };
+
+
 
 const sortDateFunc = (a: Activity, b: Activity) => {
   return (
@@ -421,6 +446,10 @@ const sortDateFunc = (a: Activity, b: Activity) => {
   );
 };
 const sortDateFuncReverse = (a: Activity, b: Activity) => sortDateFunc(b, a);
+
+const formatDate = (date: any) =>{
+  
+}
 
 export {
   titleForShow,

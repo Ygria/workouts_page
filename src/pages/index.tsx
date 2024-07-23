@@ -6,7 +6,7 @@ import RunMap from '@/components/RunMap';
 import RunTable from '@/components/RunTable';
 import SVGStat from '@/components/SVGStat';
 import YearsStat from '@/components/YearsStat';
-import useActivities from '@/hooks/useActivities';
+import useCSVParserFromURL from '@/hooks/useWorkouts';
 import useSiteMetadata from '@/hooks/useSiteMetadata';
 import { IS_CHINESE } from '@/utils/const';
 import {
@@ -27,20 +27,24 @@ import {
 
 const Index = () => {
   const { siteTitle } = useSiteMetadata();
-  const { activities, thisYear } = useActivities();
-  const [year, setYear] = useState(thisYear);
-  const [runIndex, setRunIndex] = useState(-1);
-  const [runs, setActivity] = useState(
-    filterAndSortRuns(activities, year, filterYearRuns, sortDateFunc)
-  );
+  // const { workouts, thisYear } = useWorkouts();
+  // const [year, setYear] = useState(thisYear);
+  const [runIndex, setRunIndex] = useState(-1)
+
+
+
+  const { data, loading, error } = useCSVParserFromURL("/DATA/workouts/2024.csv");
+
+  
+
   const [title, setTitle] = useState('');
-  const [geoData, setGeoData] = useState(geoJsonForRuns(runs));
+  // const [geoData, setGeoData] = useState(geoJsonForRuns(runs));
   // for auto zoom
-  const bounds = getBoundsForGeoData(geoData);
+  // const bounds = getBoundsForGeoData(geoData);
   const [intervalId, setIntervalId] = useState<number>();
 
   const [viewState, setViewState] = useState<IViewState>({
-    ...bounds,
+    // ...bounds,
   });
 
   const changeByItem = (
@@ -52,8 +56,8 @@ const Index = () => {
     if (name != 'Year') {
       setYear(thisYear);
     }
-    setActivity(filterAndSortRuns(activities, item, func, sortDateFunc));
-    setRunIndex(-1);
+    setRuns(filterAndSortRuns(workouts, item, func, sortDateFunc));
+    // setRunIndex(-1);
     setTitle(`${item} ${name} Heatmap`);
   };
 
@@ -87,14 +91,14 @@ const Index = () => {
     scrollToMap();
     // type in year, filter year first, then type
     if(year != 'Total'){
-      setYear(year);
-      setActivity(filterAndSortRuns(activities, year, filterYearRuns, sortDateFunc, type, filterTypeRuns));
+      // setYear(year);
+      // setRuns(filterAndSortRuns(workouts, year, filterYearRuns, sortDateFunc, type, filterTypeRuns));
     }
     else {
-      setYear(thisYear);
-      setActivity(filterAndSortRuns(activities, type, filterTypeRuns, sortDateFunc));
+      // setYear(thisYear);
+      // setRuns(filterAndSortRuns(workouts, type, filterTypeRuns, sortDateFunc));
     }
-    setRunIndex(-1);
+
     setTitle(`${year} ${type} Type Heatmap`);
   };
 
@@ -115,7 +119,7 @@ const Index = () => {
     if (!lastRun) {
       return;
     }
-    setGeoData(geoJsonForRuns(selectedRuns));
+    // setGeoData(geoJsonForRuns(selectedRuns));
     setTitle(titleForShow(lastRun));
     clearInterval(intervalId);
     scrollToMap();
@@ -123,9 +127,11 @@ const Index = () => {
 
   useEffect(() => {
     setViewState({
-      ...bounds,
+      // ...bounds,
     });
-  }, [geoData]);
+  }, []);
+  const year = "2024"
+  const runs = []
 
   useEffect(() => {
     const runsNum = runs.length;
@@ -138,11 +144,11 @@ const Index = () => {
       }
 
       const tempRuns = runs.slice(0, i);
-      setGeoData(geoJsonForRuns(tempRuns));
+      // setGeoData(geoJsonForRuns(tempRuns));
       i += sliceNum;
     }, 10);
     setIntervalId(id);
-  }, [runs]);
+  }, []);
 
   useEffect(() => {
     if (year !== 'Total') {
@@ -189,11 +195,11 @@ const Index = () => {
     return () => {
       svgStat && svgStat.removeEventListener('click', handleClick);
     };
-  }, [year]);
+  }, ['2024']);
 
   return (
     <Layout>
-      <div className="w-full lg:w-1/4">
+      {/* <div className="w-full lg:w-1/4">
         <h1 className="my-12 text-5xl font-extrabold italic">
           <a href="/">{siteTitle}</a>
         </h1>
@@ -207,27 +213,26 @@ const Index = () => {
         ) : (
           <YearsStat year={year} onClick={changeYear} onClickTypeInYear={changeTypeInYear}/>
         )}
-      </div>
-      <div className="w-full lg:w-4/5">
-        <RunMap
+      </div> */}
+      <div className="w-full lg:w-2/3 mx-auto">
+        {/* <RunMap
           title={title}
           viewState={viewState}
-          geoData={geoData}
+          // geoData={geoData}
           setViewState={setViewState}
           changeYear={changeYear}
           thisYear={year}
-        />
-        {year === 'Total' ? (
-          <SVGStat />
-        ) : (
+        /> */}
+        {/* <SVGStat /> */}
+        {data &&  
           <RunTable
-            runs={runs}
+            runs={data}
             locateActivity={locateActivity}
-            setActivity={setActivity}
+            setActivity={()=>{}}
             runIndex={runIndex}
             setRunIndex={setRunIndex}
           />
-        )}
+        }
       </div>
       {/* Enable Audiences in Vercel Analytics: https://vercel.com/docs/concepts/analytics/audiences/quickstart */}
       <Analytics />

@@ -1,4 +1,4 @@
-import { formatPace, colorFromType, formatRunTime, Activity, RunIds } from '@/utils/utils';
+import { formatPace, colorFromType, formatRunTime, Activity, RunIds,formatDate } from '@/utils/utils';
 import styles from './style.module.css';
 
 interface IRunRowProperties {
@@ -10,7 +10,7 @@ interface IRunRowProperties {
 }
 
 const RunRow = ({ elementIndex, locateActivity, run, runIndex, setRunIndex }: IRunRowProperties) => {
-  const distance = (run.distance / 1000.0).toFixed(2);
+  const distance = (run.Distance / 1000.0).toFixed(2);
   const paceParts = run.average_speed ? formatPace(run.average_speed) : null;
   const heartRate = run.average_heartrate;
   const type = run.type;
@@ -30,15 +30,16 @@ const RunRow = ({ elementIndex, locateActivity, run, runIndex, setRunIndex }: IR
       className={`${styles.runRow} ${runIndex === elementIndex ? styles.selected : ''}`}
       key={run.start_date_local}
       onClick={handleClick}
-      style={{color: colorFromType(type)}}
+   
     >
-      <td>{run.name}</td>
-      <td>{type}</td>
+      <td className={styles.runDate}>{formatDate(run["Start Date"])}</td>
+     
+      <td>{run.Name}</td>
       <td>{distance}</td>
-      <td>{paceParts}</td>
-      <td>{heartRate && heartRate.toFixed(0)}</td>
-      <td>{runTime}</td>
-      <td className={styles.runDate}>{run.start_date_local}</td>
+      <td>{run["Elevation Ascended"]}</td>
+      <td>{run["Total Energy"]}</td>
+      <td>{run.Duration}</td>
+     
     </tr>
   );
 };

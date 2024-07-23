@@ -2,6 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+
+@font-face {
+  font-family: 'NumberFont';
+  src: url('../assets/fonts/number.TTF'); /* 注意路径 */
+}
+
+:root {
+  --background-color: #111111;
+  --text-color: #f9d38c;
+  --title-color: #ad5a78;
+  --highlight-color: #f39d4d;
+}
+
+
 img::selection {
   background: transparent;
 }

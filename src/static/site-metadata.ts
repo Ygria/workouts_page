@@ -19,6 +19,12 @@ const data: ISiteMetadataResult = {
   navLinks: [
     {
       name: 'Blog',
+      icon: 'FaGithub',
+      url: 'https://ygria.site',
+    },
+    {
+      name: 'Blog',
+      icon: 'FaGithub',
       url: 'https://ygria.site',
     },
     // {

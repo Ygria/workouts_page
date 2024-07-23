@@ -2,7 +2,7 @@ import MapboxLanguage from '@mapbox/mapbox-gl-language';
 import React, {useRef, useCallback, useState} from 'react';
 import Map, {Layer, Source, FullscreenControl, NavigationControl, MapRef} from 'react-map-gl';
 import {MapInstance} from "react-map-gl/src/types/lib";
-import useWorkouts from '@/hooks/useWorkouts';
+// import useWorkouts from '@/hooks/useWorkouts';
 import {
   MAP_LAYER_LIST,
   IS_CHINESE,
@@ -42,7 +42,7 @@ const RunMap = ({
   geoData,
   thisYear,
 }: IRunMapProps) => {
-  const { countries, provinces } = useWorkouts();
+  // const { countries, provinces } = useWorkouts();
   const mapRef = useRef<MapRef>();
   const [lights, setLights] = useState(PRIVACY_MODE ? false : LIGHTS_ON);
   const keepWhenLightsOff = ['runs2']
@@ -83,23 +83,23 @@ const RunMap = ({
     },
     [mapRef, lights]
   );
-  const filterProvinces = provinces.slice();
-  const filterCountries = countries.slice();
-  // for geojson format
-  filterProvinces.unshift('in', 'name');
-  filterCountries.unshift('in', 'name');
+  // const filterProvinces = provinces.slice();
+  // const filterCountries = countries.slice();
+  // // for geojson format
+  // filterProvinces.unshift('in', 'name');
+  // filterCountries.unshift('in', 'name');
 
-  const initGeoDataLength = geoData.features.length;
-  const isBigMap = (viewState.zoom ?? 0) <= 3;
-  if (isBigMap && IS_CHINESE) {
-    // Show boundary and line together, combine geoData(only when not combine yet)
-    if(geoData.features.length === initGeoDataLength){
-      geoData = {
-          "type": "FeatureCollection",
-          "features": geoData.features.concat(geoJsonForMap().features)
-      };
-    }
-  }
+  // const initGeoDataLength = geoData.features.length;
+  // const isBigMap = (viewState.zoom ?? 0) <= 3;
+  // if (isBigMap && IS_CHINESE) {
+  //   // Show boundary and line together, combine geoData(only when not combine yet)
+  //   if(geoData.features.length === initGeoDataLength){
+  //     geoData = {
+  //         "type": "FeatureCollection",
+  //         "features": geoData.features.concat(geoJsonForMap().features)
+  //     };
+  //   }
+  // }
 
   const isSingleRun =
     geoData.features.length === 1 &&

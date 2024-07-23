@@ -3,14 +3,14 @@ import useActivities from '@/hooks/useActivities';
 import useWorkouts from "@/hooks/useWorkouts"
 
 // only support China for now
-const CitiesStat = ({ onClick }: { onClick: (_city: string) => void }) => {
-  const { cities } = useWorkouts();
+const WorkTypeStat = ({ onClick }: { onClick: (_city: string) => void }) => {
+  // const { workouts } = useWorkouts();
 
-  const citiesArr = Object.entries(cities);
-  citiesArr.sort((a, b) => b[1] - a[1]);
+  // const citiesArr = Object.entries(workouts);
+  // citiesArr.sort((a, b) => b[1] - a[1]);
   return (
     <div className="cursor-pointer">
-      <section>
+      {/* <section>
         {citiesArr.map(([city, distance]) => (
           <Stat
             key={city}
@@ -20,10 +20,10 @@ const CitiesStat = ({ onClick }: { onClick: (_city: string) => void }) => {
             onClick={() => onClick(city)}
           />
         ))}
-      </section>
+      </section> */}
       <hr color="red" />
     </div>
   );
 };
 
-export default CitiesStat;
+export default WorkTypeStat;

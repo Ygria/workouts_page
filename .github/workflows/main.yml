@@ -1,0 +1,36 @@
+name: Sync Other Repository
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:    
+jobs:
+  sync-repo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout other repository
+        uses: actions/checkout@v3
+        with:
+          repository: Ygria/health
+          path: health
+
+      # Step 3: Copy content from other repository to current repository
+      - name: Copy content
+        run: |
+          cp -r health/* /public/
+        
+
+      # Step 4: Configure git
+      - name: Configure git
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      # Step 5: Commit and push changes
+      - name: Commit and push changes
+        run: |
+          git add .
+          git commit -m "Sync content from other-repo"
+          git push origin master
+          

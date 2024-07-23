@@ -4,6 +4,7 @@ import { WebMercatorViewport } from 'viewport-mercator-project';
 import { chinaGeojson, RPGeometry } from '@/static/run_countries';
 import worldGeoJson from '@surbowl/world-geo-json-zh/world.zh.json';
 import { chinaCities } from '@/static/city';
+import moment from 'moment';
 import {
   MAIN_COLOR,
   MUNICIPALITY_CITIES_ARR,
@@ -447,8 +448,8 @@ const sortDateFunc = (a: Activity, b: Activity) => {
 };
 const sortDateFuncReverse = (a: Activity, b: Activity) => sortDateFunc(b, a);
 
-const formatDate = (date: any) =>{
-  
+const formatDate = (dateString: string) =>{
+  return moment(dateString).format('YYYY-MM-DD HH:mm:ss');
 }
 
 export {
@@ -474,4 +475,5 @@ export {
   colorFromType,
   formatRunTime,
   convertMovingTime2Sec,
+  formatDate
 };

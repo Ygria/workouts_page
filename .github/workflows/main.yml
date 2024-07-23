@@ -13,15 +13,8 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: Ygria/health
-          path: health
+          path: public
           token: ${{ secrets.HEALTH_TOKEN}} # 使用自定义的 token
-
-      # Step 3: Copy content from other repository to current repository
-      - name: Copy content
-        run: |
-          cp -r health/* /public/
-        
-
       # Step 4: Configure git
       - name: Configure git
         run: |

@@ -33,7 +33,7 @@ const Index = () => {
 
 
 
-  const { data, loading, error } = useCSVParserFromURL("/DATA/workouts/2024.csv");
+  const { data, loading, error } = useCSVParserFromURL("/workouts/2024.csv");
 
   
 

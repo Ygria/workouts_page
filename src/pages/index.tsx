@@ -9,6 +9,7 @@ import YearsStat from '@/components/YearsStat';
 import useCSVParserFromURL from '@/hooks/useWorkouts';
 import useSiteMetadata from '@/hooks/useSiteMetadata';
 import { IS_CHINESE } from '@/utils/const';
+import Heatmap from '@/components/Chart/heatmap';
 import {
   Activity,
   IViewState,
@@ -224,9 +225,11 @@ const Index = () => {
           thisYear={year}
         /> */}
         {/* <SVGStat /> */}
+        <h1 className="my-12 text-5xl font-extrabold italic">Workouts</h1>
+        <Heatmap width={800} height={300} />
         {data &&  
           <RunTable
-            runs={data}
+            runs={data.reverse()}
             locateActivity={locateActivity}
             setActivity={()=>{}}
             runIndex={runIndex}

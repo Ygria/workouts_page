@@ -1,4 +1,4 @@
-import { formatPace, colorFromType, formatRunTime, Activity, RunIds,formatDate } from '@/utils/utils';
+import { formatPace, colorFromType, formatRunTime, Activity, RunIds,formatDate, formatTime } from '@/utils/utils';
 import styles from './style.module.css';
 
 interface IRunRowProperties {
@@ -38,7 +38,7 @@ const RunRow = ({ elementIndex, locateActivity, run, runIndex, setRunIndex }: IR
       <td>{distance}</td>
       <td>{run["Elevation Ascended"]}</td>
       <td>{run["Total Energy"]}</td>
-      <td>{run.Duration}</td>
+      <td>{  formatTime(run.Duration)}</td>
      
     </tr>
   );

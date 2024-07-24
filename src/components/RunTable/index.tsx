@@ -5,6 +5,7 @@ import {
   convertMovingTime2Sec,
   Activity,
   RunIds,
+
 } from '@/utils/utils';
 import RunRow from './RunRow';
 import styles from './style.module.css';
@@ -29,7 +30,13 @@ const RunTable = ({
   const [sortFuncInfo, setSortFuncInfo] = useState('');
   // TODO refactor?
   const sortTypeFunc: SortFunc = (a, b) =>
-    sortFuncInfo === 'Type' ? a.type > b.type ? 1:-1 : b.type < a.type ? -1:1;
+    sortFuncInfo === 'Type'
+      ? a.type > b.type
+        ? 1
+        : -1
+      : b.type < a.type
+        ? -1
+        : 1;
   const sortKMFunc: SortFunc = (a, b) =>
     sortFuncInfo === 'KM' ? a.distance - b.distance : b.distance - a.distance;
   const sortPaceFunc: SortFunc = (a, b) =>
@@ -51,13 +58,11 @@ const RunTable = ({
   const sortDateFuncClick =
     sortFuncInfo === 'Date' ? sortDateFunc : sortDateFuncReverse;
   const sortFuncMap = new Map([
- 
     ['Type', sortTypeFunc],
-    ['距离', sortKMFunc],
-    ['Pace', sortPaceFunc],
-    ['消耗热量', sortBPMFunc],
+    ['距离（KM）', sortKMFunc],
+    ['爬升（M）', sortPaceFunc],
+    ['消耗热量（cal）', sortBPMFunc],
     ['耗时', sortRunTimeFunc],
-   
   ]);
 
   const handleClick: React.MouseEventHandler<HTMLElement> = (e) => {
@@ -83,16 +88,20 @@ const RunTable = ({
           </tr>
         </thead>
         <tbody>
-          {runs.map((run, elementIndex) => (
-            <RunRow
-              key={run.UUID}
-              elementIndex={elementIndex}
-              locateActivity={locateActivity}
-              run={run}
-              runIndex={runIndex}
-              setRunIndex={setRunIndex}
-            />
-          ))}
+          {runs
+            .sort((a, b) => {
+              return new Date(b["Start Date"]).getTime() - new Date(a["Start Date"]).getTime();
+            })
+            .map((run, elementIndex) => (
+              <RunRow
+                key={run.UUID}
+                elementIndex={elementIndex}
+                locateActivity={locateActivity}
+                run={run}
+                runIndex={runIndex}
+                setRunIndex={setRunIndex}
+              />
+            ))}
         </tbody>
       </table>
     </div>

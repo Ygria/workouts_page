@@ -78,45 +78,29 @@ const Heatmap = () => {
       },
     ];
 
-    layers.forEach((layer) => {
-      const layerData = dataReady.filter((d) => d.name === layer.category);
-      const arcData = pieGenerator(layerData);
-      debugger
+    layers.forEach(layer => {
+      const categoryData = dataReady.find(d => d.name === layer.category);
+      const endAngle = 2 * Math.PI * categoryData.value;
 
-      svg
-        .selectAll(`.arc-${layer.category}`)
-        .data(arcData)
-        .enter()
-        .append('path')
-        .attr('class', `arc-${layer.category}`)
-        .attr(
-          'd',
-          arcGenerator
-          
-            .innerRadius(layer.innerRadius)
-            .outerRadius(layer.outerRadius)
-        )
-        .attr('fill', (d) => color(d.data.name))
+      // 绘制实际值的弧形
+      svg.append('path')
+        .datum({ startAngle: 0, endAngle, innerRadius: layer.innerRadius, outerRadius: layer.outerRadius })
+        .attr('d', arcGenerator)
+        .attr('fill', color(categoryData.name))
         .attr('stroke', 'white')
         .style('stroke-width', '2px');
 
-      // 绘制剩余部分的透明弧
-      svg
-        .append('path')
-        .attr(
-          'd',
-          arcGenerator({
-            startAngle: arcData[0].endAngle,
-            endAngle: 2 * Math.PI,
-            innerRadius: layer.innerRadius,
-            outerRadius: layer.outerRadius,
-          })
-        )
+      // 绘制剩余部分的透明弧形
+      svg.append('path')
+        .datum({ startAngle: endAngle, endAngle: 2 * Math.PI, innerRadius: layer.innerRadius, outerRadius: layer.outerRadius })
+        .attr('d', arcGenerator)
         .attr('fill', 'transparent')
         .attr('stroke', 'white')
         .style('stroke-width', '2px');
     });
+
   }, []);
+
 
   // useEffect(() => {
   //   const margin = { top: 20, right: 30, bottom: 30, left: 40 };

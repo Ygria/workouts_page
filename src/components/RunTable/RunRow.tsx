@@ -24,14 +24,20 @@ const RunRow = ({ elementIndex, locateActivity, run, runIndex, setRunIndex }: IR
     setRunIndex(elementIndex);
     locateActivity([run.run_id]);
   };
+  if(!run.UUID){
+    return null;
+  }
 
   return (
+    
+    
     <tr
       className={`${styles.runRow} ${runIndex === elementIndex ? styles.selected : ''}`}
       key={run.start_date_local}
       onClick={handleClick}
    
     >
+    
       <td className={styles.runDate}>{formatDate(run["Start Date"])}</td>
      
       <td>{run.Name}</td>

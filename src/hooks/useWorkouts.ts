@@ -22,8 +22,9 @@ const useCSVParserFromURL = (fileURL) => {
         const csvString = await response.text();
         readString(csvString, {
           header: true, // optional: if your CSV string has a header row
+          skipEmptyLines: true, // 忽略空行
           complete: (result) => {
-            setData(result.data);
+            setData(result.data.reverse());
             setLoading(false);
           },
           error: (err) => {

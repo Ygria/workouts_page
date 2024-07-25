@@ -10,7 +10,9 @@
 
 .runTable {
   width: 100%;
-  padding: 24px;
+  table {
+    padding: 24px;
+  }
   font-variant: tabular-nums;
   margin: 2rem 0 5rem 0;
   font-family: NumberFont;
@@ -24,7 +26,7 @@
     text-align: right;
 
     :is(th) {
-      padding: 0.5rem;
+      padding: 0.5rem 2rem;
     }
   }
 }
@@ -32,7 +34,7 @@
 .runRow {
   cursor: pointer;
   :is(td) {
-    padding: 0.5rem;
+    padding: 0.5rem 2rem;
     border: 0;
     text-align: right;
 

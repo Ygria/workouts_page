@@ -7,21 +7,40 @@ const Heatmap = () => {
   const svgRef = useRef(null);
   const { data } = useCSVParserFromURL('/activity/2024.csv');
 
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const handlePrev = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? data.length - 1 : prevIndex - 1
+    );
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === data.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
   useEffect(() => {
     if (!data || data.length == 0) {
       return;
     }
+
     const width = 400;
     const height = 400;
     const margin = 20;
     const radius = Math.min(width, height) / 2 - margin;
 
-    const svg = d3
+    let svg = d3.select(svgRef.current);
+    svg.selectAll('*').remove();  // 清除之前的图表
+
+     svg = d3
       .select(svgRef.current)
       .attr('width', width)
       .attr('height', height)
       .append('g')
       .attr('transform', `translate(${width / 2},${height / 2})`);
+    svg.selectAll('*').remove(); // 清除之前的图表
 
     const color = d3
       .scaleOrdinal()
@@ -34,31 +53,38 @@ const Heatmap = () => {
       .outerRadius((d) => d.outerRadius)
       .cornerRadius(10);
 
-    const pieGenerator = d3
-      .pie()
-      .value((d) => d.value)
-      .sort(null)
-      .startAngle(0)
-      .endAngle(2 * Math.PI);
-
     const dataReady = [
       {
         name: 'moveActual',
-        value: data[0]['Move Actual'] / data[0]['Move Goal'],
+        cnName: '锻炼目标',
+        value:
+          data[currentIndex]['Move Actual'] / data[currentIndex]['Move Goal'],
+        actual: data[currentIndex]['Move Actual'],
+        goal: data[currentIndex]['Move Goal'],
+        unit: 'cal',
       },
       {
         name: 'exerciseActual',
-        value: data[0]['Exercise Actual'] / data[0]['Exercise Goal'],
+        cnName: '运动时间',
+        value:
+          data[currentIndex]['Exercise Actual'] /
+          data[currentIndex]['Exercise Goal'],
+        actual: data[currentIndex]['Exercise Actual'],
+        goal: data[currentIndex]['Exercise Goal'],
+        unit: 'hours',
       },
       {
         name: 'standActual',
-        value: data[0]['Stand Actual'] / data[0]['Stand Goal'],
+        cnName: '站立时间',
+        value:
+          data[currentIndex]['Stand Actual'] / data[currentIndex]['Stand Goal'],
+        actual: data[currentIndex]['Stand Actual'],
+        goal: data[currentIndex]['Stand Goal'],
+        unit: 'minutes',
       },
     ];
 
-    console.log(dataReady,dataReady)
-
-
+    console.log(dataReady, dataReady);
 
     const layers = [
       {
@@ -78,29 +104,67 @@ const Heatmap = () => {
       },
     ];
 
-    layers.forEach(layer => {
-      const categoryData = dataReady.find(d => d.name === layer.category);
+    const tooltip = d3
+      .select('body')
+      .append('div')
+      .style('position', 'absolute')
+      .style('border', 'none')
+      .style('background', '#FFFFFF50')
+      .style('border', '1px solid #ccc')
+      .style('padding', '5px 10px')
+      .style('border-radius', '5px')
+      .style('box-shadow', '0 0 10px rgba(0,0,0,0.2)')
+      .style('visibility', 'hidden');
+
+    layers.forEach((layer) => {
+      const categoryData = dataReady.find((d) => d.name === layer.category);
       const endAngle = 2 * Math.PI * categoryData.value;
 
       // 绘制实际值的弧形
-      svg.append('path')
-        .datum({ startAngle: 0, endAngle, innerRadius: layer.innerRadius, outerRadius: layer.outerRadius })
+      svg
+        .append('path')
+        .datum({
+          startAngle: 0,
+          endAngle,
+          innerRadius: layer.innerRadius,
+          outerRadius: layer.outerRadius,
+        })
         .attr('d', arcGenerator)
         .attr('fill', color(categoryData.name))
         .attr('stroke', 'white')
-        .style('stroke-width', '2px');
+        .style('stroke-width', '2px')
+        .style('stroke-linecap', 'butt') // 设置线条末端为整齐的边缘
+        .on('mouseover', (event, d) => {
+          tooltip
+            .style('visibility', 'visible')
+            .text(
+              ` ${categoryData.cnName}  ${categoryData.actual} / ${categoryData.goal}  ${categoryData.unit}`
+            );
+        })
+        .on('mousemove', (event) => {
+          tooltip
+            .style('top', event.pageY - 10 + 'px')
+            .style('left', event.pageX + 10 + 'px');
+        })
+        .on('mouseout', () => {
+          tooltip.style('visibility', 'hidden');
+        });
 
       // 绘制剩余部分的透明弧形
-      svg.append('path')
-        .datum({ startAngle: endAngle, endAngle: 2 * Math.PI, innerRadius: layer.innerRadius, outerRadius: layer.outerRadius })
+      svg
+        .append('path')
+        .datum({
+          startAngle: endAngle,
+          endAngle: 2 * Math.PI,
+          innerRadius: layer.innerRadius,
+          outerRadius: layer.outerRadius,
+        })
         .attr('d', arcGenerator)
         .attr('fill', 'transparent')
-        .attr('stroke', 'white')
-        .style('stroke-width', '2px');
+        .attr('stroke', '#59637c3d')
+        .style('stroke-width', '1px');
     });
-
-  }, []);
-
+  }, [data, currentIndex]);
 
   // useEffect(() => {
   //   const margin = { top: 20, right: 30, bottom: 30, left: 40 };
@@ -164,7 +228,30 @@ const Heatmap = () => {
   //     .call(d3.axisLeft(y));
 
   // }, [data]);
-  return <svg ref={svgRef}></svg>;
+  return (
+    <>
+      {data && data[currentIndex] && (
+        <>
+          <div className="flex gap-2">
+            <span>{data[currentIndex]['Date']}</span>
+            <button
+              onClick={handleNext}
+              className="px-2 py-0 hover:bg-white/20"
+            >
+              前一天
+            </button>
+            <button
+              onClick={handlePrev}
+              className=" px-2 py-0 hover:bg-white/20"
+            >
+              后一天
+            </button>
+          </div>
+          <svg ref={svgRef}></svg>
+        </>
+      )}
+    </>
+  );
 };
 
 export default Heatmap;

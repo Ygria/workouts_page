@@ -10,6 +10,7 @@ import useCSVParserFromURL from '@/hooks/useWorkouts';
 import useSiteMetadata from '@/hooks/useSiteMetadata';
 import { IS_CHINESE } from '@/utils/const';
 import Heatmap from '@/components/Chart/heatmap';
+import Banner from '@/components/Chart/banner';
 import {
   Activity,
   IViewState,
@@ -25,6 +26,10 @@ import {
   titleForShow,
   RunIds,
 } from '@/utils/utils';
+import { cn } from '@/lib/util';
+import BlurryBlob from '@/components/animata/background/blurry-blob';
+
+import useIsEmbedded from '@/hooks/useIsEmbedded';
 
 const Index = () => {
   const { siteTitle } = useSiteMetadata();
@@ -32,11 +37,13 @@ const Index = () => {
   // const [year, setYear] = useState(thisYear);
   const [runIndex, setRunIndex] = useState(-1)
 
+  const isEmbedded = useIsEmbedded();
+
 
 
   const { data, loading, error } = useCSVParserFromURL("/workouts/2024.csv");
 
-  
+
 
   const [title, setTitle] = useState('');
   // const [geoData, setGeoData] = useState(geoJsonForRuns(runs));
@@ -88,10 +95,10 @@ const Index = () => {
     changeByItem(type, 'Type', filterTypeRuns);
   };
 
-  const changeTypeInYear = (year:string, type: string) => {
+  const changeTypeInYear = (year: string, type: string) => {
     scrollToMap();
     // type in year, filter year first, then type
-    if(year != 'Total'){
+    if (year != 'Total') {
       // setYear(year);
       // setRuns(filterAndSortRuns(workouts, year, filterYearRuns, sortDateFunc, type, filterTypeRuns));
     }
@@ -200,6 +207,12 @@ const Index = () => {
 
   return (
     <Layout>
+      {!isEmbedded && (<BlurryBlob
+        className="rounded-4xl opacity-45"
+        firstBlobColor="bg-purple-400"
+        secondBlobColor="bg-blue-400"
+      />)}
+
       {/* <div className="w-full lg:w-1/4">
         <h1 className="my-12 text-5xl font-extrabold italic">
           <a href="/">{siteTitle}</a>
@@ -215,7 +228,7 @@ const Index = () => {
           <YearsStat year={year} onClick={changeYear} onClickTypeInYear={changeTypeInYear}/>
         )}
       </div> */}
-      <div className="w-full lg:w-2/3 mx-auto">
+      <div className={cn('w-full lg:w-2/3 mx-auto', isEmbedded && 'embeded')} data-theme={isEmbedded ? 'embeded' : ''}>
         {/* <RunMap
           title={title}
           viewState={viewState}
@@ -225,13 +238,16 @@ const Index = () => {
           thisYear={year}
         /> */}
         {/* <SVGStat /> */}
-        <h1 className="my-12 text-5xl font-extrabold italic">Workouts</h1>
-        <Heatmap width={800} height={300} />
-        {data &&  
+
+        {!isEmbedded && ( <h1 className="my-12 text-5xl font-extrabold italic">Workouts</h1>)}
+       
+        <Banner />
+
+        {data &&
           <RunTable
             runs={data.reverse()}
             locateActivity={locateActivity}
-            setActivity={()=>{}}
+            setActivity={() => { }}
             runIndex={runIndex}
             setRunIndex={setRunIndex}
           />

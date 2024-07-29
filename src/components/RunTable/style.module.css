@@ -10,19 +10,22 @@
 
 .runTable {
   width: 100%;
+  font-family: monospace;
+  font-weight: 500;
   table {
     padding: 24px;
   }
+
   font-variant: tabular-nums;
   margin: 2rem 0 5rem 0;
-  font-family: NumberFont;
-  font-weight: 700;
-  font-size: 18px;
+
+  /* font-weight: 700; */
+  font-size: 16px;
   user-select: none;
-  background-color: rgba(0, 0, 0, 0.3);
+
 
   :is(thead) {
-    color: rgb(204, 204, 204);
+    color: var(--title-color);
     text-align: right;
 
     :is(th) {
@@ -33,6 +36,7 @@
 
 .runRow {
   cursor: pointer;
+
   :is(td) {
     padding: 0.5rem 2rem;
     border: 0;
@@ -49,12 +53,22 @@
   }
 }
 
-tr:hover,.selected {
-  color:var(--highlight-color);
-  text-shadow: 0 0 10px rgba(0, 255, 255, 0.7), /* 发光效果 */
-  0 0 20px rgba(0, 255, 255, 0.5),
-  0 0 30px rgba(0, 255, 255, 0.3);
-  
+
+tr:hover,
+.selected {
+  color: var(--highlight-color);
+  animation: color-animation 2s linear infinite;
+  background-size: auto auto;
+  background-clip: border-box;
+  background-size: 200% auto;
+  background-image: linear-gradient(-225deg, var(--first-blob-color) 30%, var(--next-blob-color) 60%, var(--first-blob-color) 80%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-fill-color: transparent;
+  z-index: 3;
+  background-clip: text;
+
+
 }
 
 .tableContainer {
@@ -62,6 +76,14 @@ tr:hover,.selected {
   overflow-x: auto;
 }
 
+@keyframes color-animation {
+  40%,to {
+      background-position: -200%
+  }
+}
+
+
 .runDate {
-  color: rgb(204, 204, 204);
+  font-weight: 700;
+  color: var(--title-color);
 }

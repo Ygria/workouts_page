@@ -5,14 +5,38 @@
 
 @font-face {
   font-family: 'NumberFont';
-  src: url('../assets/fonts/number.TTF'); /* 注意路径 */
+  src: url('../assets/fonts/number.TTF');
+  /* 注意路径 */
 }
 
 :root {
   --background-color: #111111;
-  --text-color: #f9d38c;
-  --title-color: #ad5a78;
-  --highlight-color: #f39d4d;
+  --text-color: #300078;
+  --title-color: #ff2173;
+  --highlight-color: #9f003a;
+  --background-image: none;
+  --first-blob-color: #c084fc;
+  --next-blob-color: #60a5fa;
+
+}
+
+.embeded {
+  /* --background-color: transparent;
+  --text-color: red;
+  --title-color: red;
+  --highlight-color: red; */
+
+}
+
+body {
+  color: var(--text-color);
+  font-family: NumberFont;
+
+}
+
+
+.embeded {
+  color: var(--text-color)
 }
 
 
@@ -28,6 +52,7 @@ body {
   text-rendering: optimizeLegibility;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
+  background-image: var(--background-image)
 }
 
 iframe {

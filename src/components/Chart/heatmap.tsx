@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import useCSVParserFromURL from '@/hooks/useWorkouts';
-import CommitGraph from '../animata/graphs/commit-graph';
+
 import { TileChart } from "@riishabh/react-calender-heatmap";
 
 const Heatmap = () => {

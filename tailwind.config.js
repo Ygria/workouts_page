@@ -36,4 +36,8 @@ export default {
     },
   },
   plugins: [],
+  compilerOptions: {
+    "sourceMap": true,
+    // 其他配置项
+  }
 };

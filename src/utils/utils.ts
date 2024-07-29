@@ -4,6 +4,8 @@ import { WebMercatorViewport } from 'viewport-mercator-project';
 import { chinaGeojson, RPGeometry } from '@/static/run_countries';
 import worldGeoJson from '@surbowl/world-geo-json-zh/world.zh.json';
 import { chinaCities } from '@/static/city';
+import { twMerge } from "tailwind-merge"
+import { type ClassValue, clsx } from "clsx"
 import moment from 'moment';
 import {
   MAIN_COLOR,
@@ -469,6 +471,12 @@ function formatTime(seconds: number): string {
   return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 }
 
+
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
+
+
 export {
   titleForShow,
   formatPace,
@@ -493,5 +501,6 @@ export {
   formatRunTime,
   convertMovingTime2Sec,
   formatDate,
-  formatTime
+  formatTime,
+  cn
 };

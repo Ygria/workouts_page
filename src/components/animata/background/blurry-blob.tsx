@@ -1,4 +1,5 @@
-import { cn } from "@/lib/util";
+import { cn } from "@/utils/utils";
+
 interface BlobProps extends React.HTMLAttributes<HTMLDivElement> {
     firstBlobColor: string;
     secondBlobColor: string;

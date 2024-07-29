@@ -6,7 +6,7 @@ import useSiteMetadata from '@/hooks/useSiteMetadata';
 
 
 import useIsEmbedded from '@/hooks/useIsEmbedded';
-import { cn } from '@/lib/util';
+import { cn } from "@/utils/utils";
 const Layout = ({ children }: React.PropsWithChildren) => {
   const { siteTitle, description, keywords } = useSiteMetadata();
 

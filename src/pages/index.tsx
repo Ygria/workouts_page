@@ -26,7 +26,7 @@ import {
   titleForShow,
   RunIds,
 } from '@/utils/utils';
-import { cn } from '@/lib/util';
+import { cn } from "@/utils/utils";
 import BlurryBlob from '@/components/animata/background/blurry-blob';
 
 import useIsEmbedded from '@/hooks/useIsEmbedded';

@@ -3,12 +3,7 @@
 import { useCallback, useEffect, useRef } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 
-import { twMerge } from "tailwind-merge"
-import { type ClassValue, clsx } from "clsx"
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
-}
-
+import { cn } from "@/utils/utils";
 
 
 function Number({

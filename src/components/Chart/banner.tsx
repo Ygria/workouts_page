@@ -11,12 +11,12 @@ const Banner = () => {
   const { data } = useCSVParserFromURL('/distances/2024.csv');
   const { data: activityData } = useCSVParserFromURL('/activity/2024.csv');
 
-  const [fullData,setFullData] = useState([]);
+  const [fullData, setFullData] = useState([]);
   const [walkingDistance, setWalkingDistance] = useState(0);
 
   const [steps, setSteps] = useState(0);
 
-  const [energy, setEnergy] = useState(0);
+  const [energy, setEnergy] = useState(0.00);
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -34,75 +34,67 @@ const Banner = () => {
 
   const mergeData = (data1, data2) => {
     const groupedData1 = data1.reduce((acc, item) => {
-        const date = item.Date;
-        if (!acc[date]) {
-            acc[date] = { ...item };
-        } else {
-            for (const key in item) {
-                if (key !== 'Date') {
-                    acc[date][key] = parseFloat(acc[date][key]) + parseFloat(item[key]);
-                }
-            }
+      const date = item.Date;
+      if (!acc[date]) {
+        acc[date] = { ...item };
+      } else {
+        for (const key in item) {
+          if (key !== 'Date') {
+            acc[date][key] = parseFloat(acc[date][key]) + parseFloat(item[key]);
+          }
         }
-        return acc;
+      }
+      return acc;
     }, {});
 
     const data2Map = data2.reduce((acc, item) => {
-        acc[item.Date] = item;
-        return acc;
+      acc[item.Date] = item;
+      return acc;
     }, {});
 
     const mergedData = [];
 
     for (const date in groupedData1) {
-        mergedData.push({
-            ...groupedData1[date],
-            ...(data2Map[date] || {})
-        });
+      mergedData.push({
+        ...groupedData1[date],
+        ...(data2Map[date] || {}),
+      });
     }
 
     for (const date in data2Map) {
-        if (!groupedData1[date]) {
-            mergedData.push(data2Map[date]);
-        }
+      if (!groupedData1[date]) {
+        mergedData.push(data2Map[date]);
+      }
     }
 
     return mergedData;
-};
+  };
 
   useEffect(() => {
-    if(data && activityData){
-      const mergedArr  = mergeData(data,activityData)
+    if (data && activityData) {
+      const mergedArr = mergeData(data, activityData);
 
-      setFullData(mergedArr)
+      setFullData(mergedArr);
     }
-
-  
-
   }, [data, activityData]);
-
-  
-
-
 
   //  绘制活动数据
   useEffect(() => {
-    if (!fullData || fullData.length == 0) {
+    if (!fullData || fullData.length == 0 || !fullData[currentIndex]) {
+      setWalkingDistance(0.00);
+      setSteps(0);
+      setEnergy(0.00);
       return;
     }
     const currentData = fullData[currentIndex];
-    setWalkingDistance(currentData['Distance Walking/Running']);
-    setSteps(Number.parseFloat(currentData['Steps']).toFixed(0));
+    setWalkingDistance(currentData['Distance Walking/Running'] || 0);
+    setSteps(Number.parseFloat(currentData['Steps' || 0]).toFixed(0));
   }, [fullData, currentIndex]);
 
   useEffect(() => {
     let svg = d3.select(svgRef.current);
     svg.selectAll('*').remove(); // 清除之前的图表
-    if (
-      !fullData ||
-      fullData.length == 0 ||
-      !fullData[currentIndex]
-    ) {
+    if (!fullData || fullData.length == 0 || !fullData[currentIndex]) {
       return;
     }
 
@@ -130,7 +122,7 @@ const Banner = () => {
       .outerRadius((d) => d.outerRadius)
       .cornerRadius(10);
 
-    setEnergy(fullData[currentIndex]['Move Actual']);
+    setEnergy(fullData[currentIndex]['Move Actual'] || 0.00);
 
     const dataReady = [
       {
@@ -249,48 +241,45 @@ const Banner = () => {
 
   return (
     <>
-      {fullData && fullData[currentIndex] && (
+      {fullData && (
         <>
           <div className="mb-6 flex items-baseline gap-2">
             <div className="h-[30px]">
-              <Ticker
-                className="text-[20px] font-black "
-                value={fullData[currentIndex]['Date']}
-              />
+              {(fullData[currentIndex] && fullData[currentIndex]['Date'] && (
+                <Ticker
+                  className="text-[20px] font-black "
+                  value={fullData[currentIndex]['Date']}
+                />
+              )) || <>无数据</>}
             </div>
 
             <AlgoliaWhiteButton text={'前一天'} onClick={handleNext} />
             <AlgoliaWhiteButton text={'后一天'} onClick={handlePrev} />
           </div>
           <div className="flex items-baseline gap-6">
-            {energy && (
-              <>
-                {' '}
-                <Ticker
-                  className="text-xl font-black md:text-7xl"
-                  value={energy}
-                />{' '}
-                千卡
-              </>
-            )}
-            {steps && (
-              <>
-                <Ticker
-                  className="text-xl font-black md:text-7xl"
-                  value={steps}
-                />{' '}
-                步
-              </>
-            )}
-            {walkingDistance && (
-              <>
-                <Ticker
-                  className="text-xl font-black md:text-7xl"
-                  value={walkingDistance}
-                />{' '}
-                米
-              </>
-            )}
+            <>
+              <Ticker
+                className="text-xl font-black md:text-7xl"
+                value={energy}
+              />
+              千卡
+            </>
+
+            <>
+              <Ticker
+                className="text-xl font-black md:text-7xl"
+                value={steps}
+              />
+              步
+            </>
+
+            <>
+              <Ticker
+                className="text-xl font-black md:text-7xl"
+                value={walkingDistance}
+              />
+              米
+            </>
           </div>
         </>
       )}

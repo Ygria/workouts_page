@@ -4,34 +4,43 @@ on:
   push:
     branches:
       - master
-  workflow_dispatch:    
+  workflow_dispatch:
+
 jobs:
   sync-repo:
     runs-on: ubuntu-latest
     steps:
-
       - name: Checkout
         uses: actions/checkout@v3
+
       - name: Checkout other repository
         uses: actions/checkout@v3
         with:
           repository: Ygria/health
           path: public
-          token: ${{ secrets.HEALTH_TOKEN}} # 使用自定义的 token  
+          token: ${{ secrets.HEALTH_TOKEN }} # 使用自定义的 token
+
+      - name: Configure git
+        run: |
+          git config --global user.email "apple.health.sync@example.com"
+          git config --global user.name "Apple Health Sync"
+
       - name: Pull latest changes
-          run: |
-            git pull origin master || true  # 允许失败以继续执行
-            git add .
-            git commit -m "Resolved merge conflicts" || true  # 允许失败以继续执行
+        run: |
+          cd public
+          git pull origin master || true  # 允许失败以继续执行
+          git add .
+          git commit -m "Resolved merge conflicts" || true  # 允许失败以继续执行
+          cd ..
+
       - name: Commit changes
         uses: EndBug/add-and-commit@v8
         with:
           author_name: Apple Health Sync  # 提交者的GitHub用户名
-          author_email: Apple Health Sync  # 提交者的电子邮件
+          author_email: apple.health.sync@example.com  # 提交者的电子邮件
           message: 'Automatically commit changes'  # 提交信息
           add: '.'  # 添加当前目录下的所有变更
 
-
-
-
-
+      - name: Push changes
+        run: |
+          git push origin master

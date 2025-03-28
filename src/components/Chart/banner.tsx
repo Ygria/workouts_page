@@ -8,8 +8,9 @@ import Heatmap from './heatmap';
 
 const Banner = () => {
   const svgRef = useRef(null);
-  const { data } = useCSVParserFromURL('/distances/2024.csv');
-  const { data: activityData } = useCSVParserFromURL('/activity/2024.csv');
+  const currentYear = new Date().getFullYear();
+  const { data } = useCSVParserFromURL(`/distances/${currentYear}.csv`);
+  const { data: activityData } = useCSVParserFromURL(`/activity/${currentYear}.csv`);
 
   const [fullData, setFullData] = useState([]);
   const [walkingDistance, setWalkingDistance] = useState(0);

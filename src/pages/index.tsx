@@ -11,6 +11,7 @@ import useSiteMetadata from '@/hooks/useSiteMetadata';
 import { IS_CHINESE } from '@/utils/const';
 import Heatmap from '@/components/Chart/heatmap';
 import Banner from '@/components/Chart/banner';
+
 import {
   Activity,
   IViewState,
@@ -41,7 +42,7 @@ const Index = () => {
 
 
 
-  const { data, loading, error } = useCSVParserFromURL("/workouts/2024.csv");
+  const { data, loading, error } = useCSVParserFromURL("/workouts/2025.csv");
 
 
 
@@ -138,7 +139,7 @@ const Index = () => {
       // ...bounds,
     });
   }, []);
-  const year = "2024"
+  const year = new Date().getFullYear();
   const runs = []
 
   useEffect(() => {

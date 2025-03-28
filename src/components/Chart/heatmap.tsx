@@ -6,7 +6,12 @@ import { TileChart } from "@riishabh/react-calender-heatmap";
 
 const Heatmap = () => {
   const ref = useRef();
-  const { data: activityData } = useCSVParserFromURL('/activity/2024.csv');
+  const currentYear = new Date().getFullYear();
+  let { data: activityData } = useCSVParserFromURL(`/activity/${currentYear}.csv`);
+  const { data : lastYearData} = useCSVParserFromURL(`/activity/${currentYear - 1}.csv`);
+
+  // 组合上一年的数据
+  activityData  = activityData.concat(lastYearData);
   // const dummydata = [
   //   { date: "2024-01-01", status: "success" as const },
   //   { date: "2024-01-02", status: "warning" as const },
@@ -31,6 +36,11 @@ const Heatmap = () => {
         status: status
       };
     });
+
+    
+
+    
+
     setDummyData(parsedData)
 
 

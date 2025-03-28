@@ -28,6 +28,22 @@ const RunRow = ({ elementIndex, locateActivity, run, runIndex, setRunIndex }: IR
     return null;
   }
 
+  const  getEmojiByName = (name: string) => {
+
+    const emojiDict = {
+      "Tennis": "🎾",
+      "Running": "🏃‍♂️",
+      "Cycling": "🚴‍♂️",
+      "Swimming": "🏊‍♂️",
+      "Walking": "🚶‍♂️",
+      "Hiking": "🥾",
+      "Jump Rope": "📿",
+      "Badminton":"🏸"
+      
+    }
+    return emojiDict[name]  ?? "";
+  }
+
   return (
     
     
@@ -40,7 +56,7 @@ const RunRow = ({ elementIndex, locateActivity, run, runIndex, setRunIndex }: IR
     
       <td className={styles.runDate}>{formatDate(run["Start Date"])}</td>
      
-      <td>{run.Name}</td>
+      <td>{getEmojiByName(run.Name)}{run.Name}</td>
       <td>{distance}</td>
       <td>{run["Elevation Ascended"]}</td>
       <td>{run["Total Energy"]}</td>
